@@ -1,10 +1,6 @@
-enum WeatherWidgetSize {
-  Small = 'small',
-  Medium = 'medium',
-  Large = 'large',
-}
+type WeatherWidgetSize = 'small' | 'medium' | 'large';
 
-export const WeatherWidget = ({ size = WeatherWidgetSize.Medium }: { size?: WeatherWidgetSize }) => {
+export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize }) => {
   return (
     <div>
       <h1>{size} Weather Widget</h1>
