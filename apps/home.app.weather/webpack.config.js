@@ -84,7 +84,7 @@ module.exports = (_, argv) => ({
     new FederatedTypesPlugin({ federationConfig }),
     new HtmlWebPackPlugin({
       template: './src/index.html',
-      title: 'app1',
+      title: 'Weather App',
       filename: 'index.html',
       chunks: ['main'],
       publicPath: '/',
