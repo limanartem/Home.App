@@ -89,6 +89,6 @@ module.exports = (_, argv) => ({
       chunks: ['main'],
       publicPath: '/',
     }),
-    //new Dotenv(),
+    new Dotenv(),
   ],
 });

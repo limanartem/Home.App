@@ -1,8 +1,4 @@
-declare enum WeatherWidgetSize {
-    Small = "small",
-    Medium = "medium",
-    Large = "large"
-}
+type WeatherWidgetSize = 'small' | 'medium' | 'large';
 export declare const WeatherWidget: ({ size }: {
     size?: WeatherWidgetSize;
 }) => import("react/jsx-runtime").JSX.Element;
