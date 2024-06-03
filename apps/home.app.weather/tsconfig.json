@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
-    "module": "CommonJS",
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./",
     "allowJs": true,
@@ -11,7 +10,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
