@@ -6,7 +6,7 @@ const config: Config.InitialOptions = {
   // setupFiles: ['<rootDir>/src/.jest/setEnvVars.js'],
   // setupFilesAfterEnv: ['<rootDir>/src/.jest/test-setup.js'],
   preset: 'ts-jest',
-  testEnvironment: 'jest-environment-jsdom',
+  //testEnvironment: 'jest-environment-jsdom',
   transform: {
     // process `*.tsx` files with `ts-jest`
     '^.+\\.tsx?$': 'ts-jest',
@@ -25,6 +25,8 @@ const config: Config.InitialOptions = {
   passWithNoTests: true,
   roots: ['src/'],
   //setupFiles: ['<rootDir>/src/.jest/globalSetup.ts'],
+  testEnvironment: './src/test-utils/undici-mockagent-fetch-jest.ts',
+
 
   // runner: 'groups',
 };
