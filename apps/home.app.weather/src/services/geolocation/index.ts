@@ -1,3 +1,5 @@
+import { ReverseGeocodeClientResponse } from './types';
+
 if ('geolocation' in navigator) {
   console.info('geolocation is available');
 } else {
@@ -25,8 +27,11 @@ export const getPositionInfo = async ({
   const response = await fetch(
     `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=,${longitude}&localityLanguage=en`,
   );
-  const data = (await response.json()) as { city: string; country: string };
+  const data = (await response.json()) as ReverseGeocodeClientResponse;
   return {
-    locality: data.city,
+    city: data.city,
+    countryName: data.countryName,
+    countryCode: data.countryCode,
+    locality: data.locality,
   };
 };
