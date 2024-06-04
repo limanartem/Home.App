@@ -1,5 +1,5 @@
-import { ForecastResponse } from 'src/test-utils/mocks/types';
-import weatherDescriptions from './descriptions.json';
+import { ForecastResponse } from './types';
+import weatherDescriptions from './descriptions';
 
 const openMeteoApiUrl = 'https://api.open-meteo.com';
 
