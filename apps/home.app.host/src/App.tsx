@@ -4,7 +4,6 @@ import WeatherWidgetType from '../@mf-types/weather/_types/WeatherWidget';
 
 import './index.scss';
 
-// @ts-expect-error
 const WeatherWidget = React.lazy(() =>import('weather/WeatherWidget')) as unknown as typeof WeatherWidgetType;
 
 const App = () => (

@@ -1,11 +1,11 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const deps = require('./package.json').dependencies;
 const { FederatedTypesPlugin } = require('@module-federation/typescript');
 const path = require('path');
 const { content } = require('../home.app.host/tailwind.config');
-const { type } = require('os');
 
 const federationConfig = {
   name: 'home_app_weather',
@@ -31,9 +31,8 @@ module.exports = (_, argv) => ({
     level: 'log',
   },
   output: {
-    publicPath: 'http://localhost:3001/',
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    //publicPath: 'http://localhost:3001/',
+    path: path.resolve(__dirname, './dist'),
     assetModuleFilename: 'assets/[name][ext]',
   },
 
@@ -80,8 +79,8 @@ module.exports = (_, argv) => ({
         },
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
-        type: 'asset/resource',
+        test: /\.(png|jpg|gif|svg)$/, // only works for "import" images in tsx files, for dynamic loading had to copy images via CopyPlugin
+        type: 'asset/resource'
       },
     ],
   },
@@ -96,6 +95,9 @@ module.exports = (_, argv) => ({
       chunks: ['main'],
       publicPath: '/',
     }),
+    /* new CopyPlugin({
+      patterns: [{ from: 'src/assets', to: 'assets' }],
+    }), */
     new Dotenv(),
   ],
 });

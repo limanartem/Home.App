@@ -6,8 +6,12 @@ import {
   onPositionChange,
 } from '../services/geolocation';
 import { Forecast, getForecast } from '../services/weather';
+import assets from '../assets';
 
 type WeatherWidgetSize = 'small' | 'medium' | 'large';
+
+const getImageUrl = (forecast: Forecast): string | undefined =>
+  assets.weatherIcons[forecast.current.icon as keyof typeof assets.weatherIcons];
 
 export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize }) => {
   const [position, setPosition] = useState<GeolocationPosition | null>(null);
@@ -51,7 +55,6 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
 
       {forecast && (
         <div>
-
           <h2>
             {JSON.stringify({
               coords: {
@@ -65,7 +68,7 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
           <h3>Current weather</h3>
           <p>{forecast.current.temperature}</p>
           <p>{forecast.current.description}</p>
-          <img src={`public/assets/weather-icons/${forecast.current.icon}`} alt={forecast.current.description} />
+          <img src={getImageUrl(forecast)} alt={forecast.current.description} />
         </div>
       )}
     </div>
