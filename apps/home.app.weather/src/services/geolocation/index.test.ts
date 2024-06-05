@@ -30,7 +30,7 @@ describe('geolocation', () => {
 
       mockPool
         .intercept({
-          path: `/data/reverse-geocode-client?latitude=${latitude}&longitude=,${longitude}&localityLanguage=en`,
+          path: `/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
           method: 'GET',
         })
         .reply(200, () => mocks.bigDataCloud.reverseGeocodeClient)

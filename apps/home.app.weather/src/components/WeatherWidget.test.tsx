@@ -1,11 +1,13 @@
 import '@testing-library/jest-dom';
 import { render, screen, cleanup, within, fireEvent, waitFor } from '@testing-library/react';
 import WeatherWidget from './WeatherWidget';
-import { getCurrentPosition } from '../services/geolocation';
+import { getCurrentPosition, getPositionInfo, onPositionChange } from '../services/geolocation';
 import { getForecast } from '../services/weather';
 
 jest.mock('../services/geolocation', () => ({
   getCurrentPosition: jest.fn(() => Promise.resolve({ coords: { latitude: 0, longitude: 0 } })),
+  getPositionInfo: jest.fn(() => Promise.resolve({ locality: 'Test' })),
+  onPositionChange: jest.fn(),
 }));
 
 jest.mock('../services/weather', () => ({
@@ -59,6 +61,7 @@ describe('WeatherWidget', () => {
           ],
         }),
       );
+      (getPositionInfo as jest.Mock).mockImplementation(() => Promise.resolve({ locality: 'Test' }));
 
       render(<WeatherWidget />);
 
@@ -66,6 +69,7 @@ describe('WeatherWidget', () => {
         expect(getCurrentPosition).toHaveBeenCalled();
         expect(getForecast).toHaveBeenCalled();
         expect(getForecast).toHaveBeenCalledWith(expect.objectContaining(coords));
+        expect(getPositionInfo).toHaveBeenCalledWith(coords);
       });
     });
   });

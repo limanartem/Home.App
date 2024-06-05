@@ -5,7 +5,7 @@ const deps = require('./package.json').dependencies;
 const { FederatedTypesPlugin } = require('@module-federation/typescript');
 const path = require('path');
 const { content } = require('../home.app.host/tailwind.config');
-
+const { type } = require('os');
 
 const federationConfig = {
   name: 'home_app_weather',
@@ -32,6 +32,9 @@ module.exports = (_, argv) => ({
   },
   output: {
     publicPath: 'http://localhost:3001/',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    assetModuleFilename: 'assets/[name][ext]',
   },
 
   resolve: {
@@ -75,6 +78,10 @@ module.exports = (_, argv) => ({
         use: {
           loader: 'ts-loader',
         },
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        type: 'asset/resource',
       },
     ],
   },
