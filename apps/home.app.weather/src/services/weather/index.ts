@@ -15,8 +15,19 @@ export interface Forecast {
   longitude: number;
   current: ForecastData;
   hourly: ForecastData[];
+  day: {
+    lowestTemperature: string;
+    highestTemperature: string;
+  };
 }
 
+/**
+ * Retrieves the weather forecast for a given latitude and longitude.
+ * @param {Object} options - The latitude and longitude options.
+ * @param {number} options.latitude - The latitude coordinate.
+ * @param {number} options.longitude - The longitude coordinate.
+ * @returns {Promise<Forecast>} The weather forecast.
+ */
 export const getForecast = async ({
   latitude,
   longitude,
@@ -25,12 +36,18 @@ export const getForecast = async ({
   longitude: number;
 }): Promise<Forecast> => {
   const response = await fetch(
-    `${openMeteoApiUrl}/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m`,
+    `${openMeteoApiUrl}/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m&forecast_days=3`,
   );
   const data = (await response.json()) as ForecastResponse;
   return {
     latitude: data.latitude,
     longitude: data.longitude,
+    day: {
+      ...getHighLowTemperatures(
+        data.hourly.temperature_2m.slice(0, 23),
+        data.current_units.temperature_2m,
+      ),
+    },
     current: {
       ...getWeatherDescription(data.current.weather_code, data.current.time),
       time: new Date(data.current.time),
@@ -44,6 +61,7 @@ export const getForecast = async ({
     })),
   };
 };
+
 function getWeatherDescription(weather_code: number, time: string) {
   const weatherProp = weather_code.toString() as keyof typeof weatherDescriptions;
   const hour = new Date(time).getHours();
@@ -60,5 +78,14 @@ function getWeatherDescription(weather_code: number, time: string) {
   return {
     description,
     icon,
+  };
+}
+
+function getHighLowTemperatures(temperatures: number[], unit: string) {
+  const lowestTemperature = Math.min(...temperatures);
+  const highestTemperature = Math.max(...temperatures);
+  return {
+    lowestTemperature: `${lowestTemperature}${unit}`,
+    highestTemperature: `${highestTemperature}${unit}`,
   };
 }

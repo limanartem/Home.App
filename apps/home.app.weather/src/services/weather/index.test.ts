@@ -31,7 +31,7 @@ describe('weather-service', () => {
     beforeEach(async () => {
       mockPool
         .intercept({
-          path: `/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m`,
+          path: `/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m&forecast_days=3`,
           method: 'GET',
         })
         .reply(200, () => mocks.openMeteo.forecast)
@@ -83,6 +83,20 @@ describe('weather-service', () => {
       expect(nightForecast).toMatchObject({
         description: 'Mainly Clear',
         icon: '01n@2x.png',
+      });
+    });
+
+    it('should map temperature units', () => {
+      expect(forecast.current.temperature).toMatch(/\d+(\.\d+)?°C/);
+      forecast.hourly.forEach((hourly) => {
+        expect(hourly.temperature).toMatch(/\d+(\.\d+)?°C/);
+      });
+    });
+
+    it("should return day's lowest and highest temperature", () => {
+      expect(forecast.day).toMatchObject({
+        lowestTemperature: '9.2°C',
+        highestTemperature: '15.8°C',
       });
     });
   });

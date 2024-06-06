@@ -1,6 +1,6 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
-const CopyPlugin = require('copy-webpack-plugin');
+//const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const deps = require('./package.json').dependencies;
 const { FederatedTypesPlugin } = require('@module-federation/typescript');
@@ -80,7 +80,11 @@ module.exports = (_, argv) => ({
       },
       {
         test: /\.(png|jpg|gif|svg)$/, // only works for "import" images in tsx files, for dynamic loading had to copy images via CopyPlugin
-        type: 'asset/resource'
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
       },
     ],
   },
