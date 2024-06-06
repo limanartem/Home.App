@@ -62,7 +62,13 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   return (
     <>
       {forecast && (
-        <Paper style={{ width: 165, height: 165, padding: 5 }}>
+        <Paper
+          style={{
+            width: size == 'small' ? 165 : 2 * 165,
+            height: size == 'large' ? 2 * 165 : 165,
+            padding: 5,
+          }}
+        >
           <Stack direction="column" spacing={1}>
             <Stack direction="row" justifyContent="space-between">
               <Stack direction="column">
@@ -87,7 +93,7 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
             </Stack>
             <Divider />
             <Stack direction="row" spacing={1} justifyContent="space-between">
-              {getNextHoursForecast(forecast).map((hourly, index) => (
+              {getNextHoursForecast(forecast, size == 'small' ? 3 : 6).map((hourly, index) => (
                 <Stack key={index} direction="column" alignItems="center">
                   <Typography variant="body1" fontSize={12}>
                     {new Date(hourly.time).getHours()}:00

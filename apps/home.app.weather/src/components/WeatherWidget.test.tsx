@@ -59,9 +59,15 @@ describe('WeatherWidget', () => {
               icon: 'cloudy',
             },
           ],
+          day: {
+            highestTemperature: '20°C',
+            lowestTemperature: '5°C',
+          },
         }),
       );
-      (getPositionInfo as jest.Mock).mockImplementation(() => Promise.resolve({ locality: 'Test' }));
+      (getPositionInfo as jest.Mock).mockImplementation(() =>
+        Promise.resolve({ locality: 'Test' }),
+      );
 
       render(<WeatherWidget />);
 

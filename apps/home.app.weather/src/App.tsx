@@ -5,11 +5,15 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Container } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 
 const App = () => (
   <Container>
-    <WeatherWidget />
+    <Stack spacing={2}>
+      <WeatherWidget size="small" />
+      <WeatherWidget size="medium" />
+      <WeatherWidget size="large" />
+    </Stack>
   </Container>
 );
 const rootElement = document.getElementById('app');
