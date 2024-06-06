@@ -3,7 +3,7 @@ import weatherDescriptions from './descriptions';
 
 const openMeteoApiUrl = 'https://api.open-meteo.com';
 
-type ForecastData = {
+export type ForecastData = {
   time: Date;
   temperature: string;
   description: string;
