@@ -7,7 +7,11 @@ import {
 } from '../services/geolocation';
 import { Forecast, getForecast } from '../services/weather';
 import assets from '../assets';
-
+import { CardContent, Paper, Typography, Stack, Box, Divider } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import StraightIcon from '@mui/icons-material/Straight';
 type WeatherWidgetSize = 'small' | 'medium' | 'large';
 
 const getImageUrl = (forecast: Forecast): string | undefined =>
@@ -49,24 +53,49 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   }, []);
 
   return (
-    <div>
+    <>
       {forecast && (
-        <div className="w-32 h-32">
-          <div className="grid grid-cols-3 grid-rows-2 gap-1 relative">
-            <div className="col-span-3">
-              <h1>{locationInfo?.city ?? locationInfo?.locality}</h1>
-            </div>
-            <div className="col-span-3">{forecast.current.temperature}</div>
-            <div className="absolute top-0 left-0 -z-10">
-              <img src={getImageUrl(forecast)} alt={forecast.current.description} />
-            </div>
-
-            <div>{forecast.day.lowestTemperature}</div>
-            <div>{forecast.day.lowestTemperature}</div>
-          </div>
-        </div>
+        <Paper style={{ width: 150, height: 150, padding: 5 }}>
+          <Stack direction="column" spacing={1}>
+            <Stack direction="row" justifyContent="space-between">
+              <Stack direction="column">
+                <Typography variant="subtitle1" fontWeight={500} alignContent="center">
+                  {locationInfo?.city ?? locationInfo?.locality}
+                </Typography>
+                <Typography variant="body1" fontSize={18}>
+                  {forecast.current.temperature}
+                </Typography>
+              </Stack>
+              <Stack direction="column" alignItems="center">
+                <img
+                  src={getImageUrl(forecast)}
+                  alt={forecast.current.description}
+                  style={{ width: 40 }}
+                />
+                <Typography variant="body1" fontSize={10} alignContent="center">
+                  {forecast.current.description}
+                </Typography>
+              </Stack>
+            </Stack>
+            <Divider />
+            <Stack direction="row" spacing={1} justifyContent="space-between">
+              <Box>
+                <Typography variant="body1" fontSize={12} color="skyblue">
+                  <StraightIcon sx={{ transform: 'rotate(180deg)', fontSize: 14 }} />
+                  {forecast.day.lowestTemperature}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="body1" fontSize={12} color="orange">
+                  <StraightIcon sx={{ fontSize: 14 }} />
+                  {forecast.day.highestTemperature}
+                </Typography>
+              </Box>
+            </Stack>
+          </Stack>
+        </Paper>
       )}
-    </div>
+    </>
   );
 };
 
