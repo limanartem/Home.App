@@ -1,4 +1,4 @@
-type ForecastData = {
+export type ForecastData = {
     time: Date;
     temperature: string;
     description: string;
@@ -25,4 +25,3 @@ export declare const getForecast: ({ latitude, longitude, }: {
     latitude: number;
     longitude: number;
 }) => Promise<Forecast>;
-export {};

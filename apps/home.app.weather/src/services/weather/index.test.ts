@@ -87,9 +87,9 @@ describe('weather-service', () => {
     });
 
     it('should map temperature units', () => {
-      expect(forecast.current.temperature).toMatch(/\d+(\.\d+)?°C/);
+      expect(forecast.current.temperatureString).toMatch(/\d+(\.\d+)?°C/);
       forecast.hourly.forEach((hourly) => {
-        expect(hourly.temperature).toMatch(/\d+(\.\d+)?°C/);
+        expect(hourly.temperatureString).toMatch(/\d+(\.\d+)?°C/);
       });
     });
 

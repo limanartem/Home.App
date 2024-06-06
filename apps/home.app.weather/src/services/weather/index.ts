@@ -5,7 +5,8 @@ const openMeteoApiUrl = 'https://api.open-meteo.com';
 
 export type ForecastData = {
   time: Date;
-  temperature: string;
+  temperatureString: string;
+  temperature: number;
   description: string;
   icon: string;
 };
@@ -51,13 +52,15 @@ export const getForecast = async ({
     current: {
       ...getWeatherDescription(data.current.weather_code, data.current.time),
       time: new Date(data.current.time),
-      temperature: `${data.current.temperature_2m}${data.current_units.temperature_2m}`,
+      temperatureString: `${data.current.temperature_2m}${data.current_units.temperature_2m}`,
+      temperature: data.current.temperature_2m,
     },
     hourly: data.hourly.time.map((time: string, index: number) => ({
       ...getWeatherDescription(data.hourly.weather_code[index], time),
       time: new Date(time),
       weatherCode: data.hourly.weather_code[index],
-      temperature: `${data.hourly.temperature_2m[index]}${data.current_units.temperature_2m}`,
+      temperatureString: `${data.hourly.temperature_2m[index]}${data.current_units.temperature_2m}`,
+      temperature: data.hourly.temperature_2m[index],
     })),
   };
 };

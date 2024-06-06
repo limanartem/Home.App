@@ -7,20 +7,18 @@ import {
 } from '../services/geolocation';
 import { Forecast, ForecastData, getForecast } from '../services/weather';
 import assets from '../assets';
-import { CardContent, Paper, Typography, Stack, Box, Divider } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { Paper, Typography, Stack, Box, Divider } from '@mui/material';
 import StraightIcon from '@mui/icons-material/Straight';
+import TemperatureChart from './TemperatureChart';
+import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 type WeatherWidgetSize = 'small' | 'medium' | 'large';
 
 const getImageUrl = (forecastData: ForecastData): string | undefined =>
   assets.weatherIcons[forecastData.icon as keyof typeof assets.weatherIcons];
 
 function getNextHoursForecast(forecast: Forecast, hours: number = 3) {
-  // Get current hour and find next 3 hours in forecast.hourly
-  const currentHour = new Date().getHours();
-  const nextHours = forecast.hourly.filter((hourly) => hourly.time.getHours() > currentHour);
+  const currentHour = new Date();
+  const nextHours = forecast.hourly.filter((hourly) => hourly.time > currentHour);
   return nextHours.slice(0, hours);
 }
 
@@ -28,6 +26,10 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   const [position, setPosition] = useState<GeolocationPosition | null>(null);
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [locationInfo, setLocationInfo] = useState<PositionInfo | null>(null);
+
+  const baseSize = 165;
+  const widgetWidth = size == 'small' ? baseSize : size == 'medium' ? 2 * 165 : 3 * 165;
+  const widgetHeight = size == 'large' ? 2 * 165 : 165;
 
   const loadForecast = async () => {
     try {
@@ -64,8 +66,8 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
       {forecast && (
         <Paper
           style={{
-            width: size == 'small' ? 165 : 2 * 165,
-            height: size == 'large' ? 2 * 165 : 165,
+            width: widgetWidth,
+            height: widgetHeight,
             padding: 5,
           }}
         >
@@ -76,8 +78,27 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
                   {locationInfo?.city ?? locationInfo?.locality}
                 </Typography>
                 <Typography variant="body1" fontSize={18}>
-                  {forecast.current.temperature}
+                  <DeviceThermostatIcon fontSize="small" htmlColor="skyblue" />
+                  {forecast.current.temperatureString}
                 </Typography>
+                {size == 'large' && (
+                  <>
+                    <Stack direction="row" spacing={1} justifyContent="space-between">
+                      <Box>
+                        <Typography variant="body1" fontSize={12} color="skyblue">
+                          <StraightIcon sx={{ transform: 'rotate(180deg)', fontSize: 14 }} />
+                          {forecast.day.lowestTemperature}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body1" fontSize={12} color="orange">
+                          <StraightIcon sx={{ fontSize: 14 }} />
+                          {forecast.day.highestTemperature}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </>
+                )}
               </Stack>
               <Stack direction="column" alignItems="center">
                 <img
@@ -105,26 +126,36 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
                     title={hourly.description}
                   />
                   <Typography variant="body1" fontSize={12}>
-                    {hourly.temperature}
+                    {hourly.temperatureString}
                   </Typography>
                 </Stack>
               ))}
             </Stack>
-            <Divider />
-            <Stack direction="row" spacing={1} justifyContent="space-between">
-              <Box>
-                <Typography variant="body1" fontSize={12} color="skyblue">
-                  <StraightIcon sx={{ transform: 'rotate(180deg)', fontSize: 14 }} />
-                  {forecast.day.lowestTemperature}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="body1" fontSize={12} color="orange">
-                  <StraightIcon sx={{ fontSize: 14 }} />
-                  {forecast.day.highestTemperature}
-                </Typography>
-              </Box>
-            </Stack>
+            {size !== 'large' && (
+              <>
+                <Divider />
+                <Stack direction="row" spacing={1} justifyContent="space-between">
+                  <Box>
+                    <Typography variant="body1" fontSize={12} color="skyblue">
+                      <StraightIcon sx={{ transform: 'rotate(180deg)', fontSize: 14 }} />
+                      {forecast.day.lowestTemperature}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body1" fontSize={12} color="orange">
+                      <StraightIcon sx={{ fontSize: 14 }} />
+                      {forecast.day.highestTemperature}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </>
+            )}
+            {size === 'large' && (
+              <>
+                <Divider />
+                <TemperatureChart forecast={forecast.hourly} />
+              </>
+            )}
           </Stack>
         </Paper>
       )}

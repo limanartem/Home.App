@@ -7,6 +7,12 @@ if ('geolocation' in navigator) {
 }
 
 export const getCurrentPosition = async () => {
+  return Promise.resolve({
+    coords: {
+      latitude: 12,
+      longitude: 45,
+    },
+  } as GeolocationPosition);
   return new Promise<GeolocationPosition>((resolve, reject) => {
     navigator.geolocation.getCurrentPosition((position) => {
       console.log('Got current position');
