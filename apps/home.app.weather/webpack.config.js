@@ -5,7 +5,6 @@ const Dotenv = require('dotenv-webpack');
 const deps = require('./package.json').dependencies;
 const { FederatedTypesPlugin } = require('@module-federation/typescript');
 const path = require('path');
-const { content } = require('../home.app.host/tailwind.config');
 
 const federationConfig = {
   name: 'home_app_weather',

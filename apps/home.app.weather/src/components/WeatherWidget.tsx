@@ -7,7 +7,6 @@ import {
 } from '../services/geolocation';
 import { Forecast, getForecast } from '../services/weather';
 import assets from '../assets';
-import { Typography } from '@material-tailwind/react';
 
 type WeatherWidgetSize = 'small' | 'medium' | 'large';
 
@@ -55,7 +54,7 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
         <div className="w-32 h-32">
           <div className="grid grid-cols-3 grid-rows-2 gap-1 relative">
             <div className="col-span-3">
-              <Typography variant="h2">{locationInfo?.city ?? locationInfo?.locality}</Typography>
+              <h1>{locationInfo?.city ?? locationInfo?.locality}</h1>
             </div>
             <div className="col-span-3">{forecast.current.temperature}</div>
             <div className="absolute top-0 left-0 -z-10">
