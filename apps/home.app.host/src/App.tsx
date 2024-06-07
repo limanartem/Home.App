@@ -9,7 +9,7 @@ const WeatherWidget = React.lazy(() =>import('weather/WeatherWidget')) as unknow
 const App = () => (
   <>
     Hosting app
-    <WeatherWidget />
+    <WeatherWidget size='large' />
   </>
 );
 const rootElement = document.getElementById('app');

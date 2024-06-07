@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   PositionInfo,
-  getCurrentPosition,
   getPositionInfo,
   onPositionChange,
 } from '../services/geolocation';
@@ -9,8 +8,11 @@ import { Forecast, ForecastData, getForecast } from '../services/weather';
 import assets from '../assets';
 import { Paper, Typography, Stack, Box, Divider } from '@mui/material';
 import StraightIcon from '@mui/icons-material/Straight';
-import TemperatureChart from './TemperatureChart';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
+import React from 'react';
+
+const TemperatureChart = React.lazy(() => import('./TemperatureChart'));
+
 type WeatherWidgetSize = 'small' | 'medium' | 'large';
 
 const getImageUrl = (forecastData: ForecastData): string | undefined =>
@@ -23,7 +25,6 @@ function getNextHoursForecast(forecast: Forecast, hours: number = 3) {
 }
 
 export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize }) => {
-  const [position, setPosition] = useState<GeolocationPosition | null>(null);
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [locationInfo, setLocationInfo] = useState<PositionInfo | null>(null);
 
@@ -33,23 +34,13 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
 
   const loadForecast = async () => {
     try {
-      const position = await getCurrentPosition();
-      setPosition(position);
-
       const clearOnPositionChange = onPositionChange(async (position) => {
         const forecast = await getForecast(position.coords);
         const locationInfo = await getPositionInfo(position.coords);
 
         setForecast(forecast);
         setLocationInfo(locationInfo);
-        setPosition(position);
       });
-
-      const forecast = await getForecast(position.coords);
-      const locationInfo = await getPositionInfo(position.coords);
-
-      setForecast(forecast);
-      setLocationInfo(locationInfo);
 
       return () => clearOnPositionChange();
     } catch (error) {
