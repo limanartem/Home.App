@@ -55,7 +55,8 @@ describe('weather-service', () => {
     it('should return a current forecast', () => {
       expect(forecast.current).toMatchObject({
         time: expect.any(Date),
-        temperature: expect.any(String),
+        temperature: expect.any(Number),
+        temperatureString: expect.any(String),
         description: expect.any(String),
         icon: expect.any(String),
       });
@@ -66,7 +67,8 @@ describe('weather-service', () => {
       forecast.hourly.forEach((hourly) => {
         expect(hourly).toMatchObject({
           time: expect.any(Date),
-          temperature: expect.any(String),
+          temperature: expect.any(Number),
+          temperatureString: expect.any(String),
           description: expect.any(String),
           icon: expect.any(String),
         });

@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react';
-import {
-  PositionInfo,
-  getPositionInfo,
-  onPositionChange,
-} from '../services/geolocation';
+import { PositionInfo, getPositionInfo, onPositionChange } from '../services/geolocation';
 import { Forecast, ForecastData, getForecast } from '../services/weather';
 import assets from '../assets';
-import { Paper, Typography, Stack, Box, Divider } from '@mui/material';
+import { Paper, Typography, Stack, Box, Divider, Skeleton } from '@mui/material';
 import StraightIcon from '@mui/icons-material/Straight';
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 import React from 'react';
@@ -24,6 +20,41 @@ function getNextHoursForecast(forecast: Forecast, hours: number = 3) {
   return nextHours.slice(0, hours);
 }
 
+const WidgetLoading = ({ size }: { size: string }) => (
+  <>
+    {size === 'small' && (
+      <Stack spacing={1} justifyContent="space-evenly" height="100%">
+        <Stack direction="row" justifyContent="space-between">
+          <Skeleton variant="rounded" width="70%" height={40} />
+          <Skeleton variant="circular" width={40} height={40} />
+        </Stack>
+        <Skeleton variant="rounded" width="100%" height={60} />
+        <Skeleton variant="rounded" width="100%" height={30} />
+      </Stack>
+    )}{' '}
+    {size === 'medium' && (
+      <Stack spacing={1} justifyContent="space-evenly" height="100%">
+        <Stack direction="row" justifyContent="space-between">
+          <Skeleton variant="rounded" width="80%" height={40} />
+          <Skeleton variant="circular" width={40} height={40} />
+        </Stack>
+        <Skeleton variant="rounded" width="100%" height={60} />
+        <Skeleton variant="rounded" width="100%" height={30} />
+      </Stack>
+    )}
+    {size === 'large' && (
+      <Stack spacing={1} justifyContent="space-evenly" height="100%">
+        <Stack direction="row" justifyContent="space-between">
+          <Skeleton variant="rounded" width="90%" height={40} />
+          <Skeleton variant="circular" width={40} height={40} />
+        </Stack>
+        <Skeleton variant="rounded" width="100%" height={60} />
+        <Skeleton variant="rounded" width="100%" height={190} />
+      </Stack>
+    )}
+  </>
+);
+
 export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize }) => {
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [locationInfo, setLocationInfo] = useState<PositionInfo | null>(null);
@@ -32,9 +63,10 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   const widgetWidth = size == 'small' ? baseSize : size == 'medium' ? 2 * 165 : 3 * 165;
   const widgetHeight = size == 'large' ? 2 * 165 : 165;
 
-  const loadForecast = async () => {
+  const loadForecast = () => {
     try {
       const clearOnPositionChange = onPositionChange(async (position) => {
+        console.info('Position changed', position);
         const forecast = await getForecast(position.coords);
         const locationInfo = await getPositionInfo(position.coords);
 
@@ -49,19 +81,20 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   };
 
   useEffect(() => {
-    loadForecast();
+    return loadForecast();
   }, []);
 
   return (
     <>
-      {forecast && (
-        <Paper
-          style={{
-            width: widgetWidth,
-            height: widgetHeight,
-            padding: 5,
-          }}
-        >
+      <Paper
+        data-testid={`${size}-Weather-Widget`}
+        style={{
+          width: widgetWidth,
+          height: widgetHeight,
+          padding: 5,
+        }}
+      >
+        {forecast ? (
           <Stack direction="column" spacing={1}>
             <Stack direction="row" justifyContent="space-between">
               <Stack direction="column">
@@ -148,8 +181,10 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
               </>
             )}
           </Stack>
-        </Paper>
-      )}
+        ) : (
+          <WidgetLoading size={size} />
+        )}
+      </Paper>
     </>
   );
 };

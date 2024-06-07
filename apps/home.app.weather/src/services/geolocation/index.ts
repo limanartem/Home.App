@@ -1,4 +1,5 @@
-import { ReverseGeocodeClientResponse } from './types';
+import { ReverseGeocodeClientResponse } from './api.bigdatacloud.net.types';
+import { GeoJsonResponse } from './get.geojs.io.types';
 
 if ('geolocation' in navigator) {
   console.info('geolocation is available');
@@ -6,28 +7,61 @@ if ('geolocation' in navigator) {
   console.info('geolocation is not available');
 }
 
+const GEO_LOCATION_TIMEOUT = 5000;
+
+const isGeolocationError = (error: GeolocationPositionError) =>
+  [error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT].includes(
+    error.code as 1 | 2 | 3,
+  );
+
+const getIpBasedGeolocation = async () => {
+  const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+  const data = (await response.json()) as GeoJsonResponse;
+  return {
+    latitude: parseFloat(data.latitude),
+    longitude: parseFloat(data.longitude),
+    accuracy: data.accuracy,
+    altitude: null,
+    altitudeAccuracy: null,
+    heading: null,
+    speed: null,
+  };
+};
+
+const GEO_API_PARAMS = {
+  enableHighAccuracy: true,
+  maximumAge: Infinity,
+  timeout: GEO_LOCATION_TIMEOUT,
+};
 export const getCurrentPosition = async () => {
-  return Promise.resolve({
-    coords: {
-      latitude: 12,
-      longitude: 45,
-    },
-  } as GeolocationPosition);
   return new Promise<GeolocationPosition>((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log('Got current position');
-      resolve(position);
-    }, (error) => {
-      console.error('Failed to get current position', error);
-      reject();
-    }, { enableHighAccuracy: false, maximumAge: Infinity });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        console.log('Got current position');
+        resolve(position);
+      },
+      async (error) => {
+        console.error('Failed to get current position', error);
+        if (!(await handleGeoPositionError(error, resolve, reject))) {
+          reject(new Error('Failed to get current position'));
+        }
+      },
+      GEO_API_PARAMS,
+    );
   });
 };
 
-export const onPositionChange = (callback: (position: GeolocationPosition) => void) => {
-  const watchId = navigator.geolocation.watchPosition(callback, undefined, { enableHighAccuracy: false });
+export const onPositionChange = (callback: (position: GeolocationPosition) => Promise<void>) => {
+  const watchId = navigator.geolocation.watchPosition(
+    callback,
+    async (error) => {
+      console.error('Failed to get current position', error);
+      await handleGeoPositionError(error, callback);
+    },
+    GEO_API_PARAMS,
+  );
   return () => navigator.geolocation.clearWatch(watchId);
-}
+};
 
 export type PositionInfo = {
   city?: string;
@@ -54,3 +88,25 @@ export const getPositionInfo = async ({
     locality: data.locality,
   };
 };
+
+async function handleGeoPositionError(
+  error: GeolocationPositionError,
+  success: (value: GeolocationPosition) => Promise<void> | void,
+  failure?: (reason?: any) => Promise<void> | void,
+) {
+  if (isGeolocationError(error)) {
+    // Fallback to use IP based geolocation
+    try {
+      const ipBasedGeolocation = await getIpBasedGeolocation();
+      await success({
+        coords: ipBasedGeolocation,
+        timestamp: Date.now(),
+      });
+      return true;
+    } catch (error2) {
+      console.error('Failed to get current position using fallback method', error2);
+      await failure?.(new Error('Failed to get current position using fallback method'));
+    }
+  }
+  return false;
+}

@@ -5,9 +5,8 @@ import { getCurrentPosition, getPositionInfo, onPositionChange } from '../servic
 import { getForecast } from '../services/weather';
 
 jest.mock('../services/geolocation', () => ({
-  getCurrentPosition: jest.fn(() => Promise.resolve({ coords: { latitude: 0, longitude: 0 } })),
   getPositionInfo: jest.fn(() => Promise.resolve({ locality: 'Test' })),
-  onPositionChange: jest.fn(),
+  onPositionChange: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('../services/weather', () => ({
@@ -23,17 +22,17 @@ describe('WeatherWidget', () => {
   describe('should render a weather widget', () => {
     it('renders a medium weather widget by default', () => {
       render(<WeatherWidget />);
-      expect(screen.getByText('medium Weather Widget')).toBeInTheDocument();
+      expect(screen.getByTestId('medium-Weather-Widget')).toBeInTheDocument();
     });
 
     it('renders a small weather widget', () => {
       render(<WeatherWidget size="small" />);
-      expect(screen.getByText('small Weather Widget')).toBeInTheDocument();
+      expect(screen.getByTestId('small-Weather-Widget')).toBeInTheDocument();
     });
 
     it('renders a large weather widget', () => {
       render(<WeatherWidget size="large" />);
-      expect(screen.getByText('large Weather Widget')).toBeInTheDocument();
+      expect(screen.getByTestId('large-Weather-Widget')).toBeInTheDocument();
     });
   });
 
@@ -41,7 +40,12 @@ describe('WeatherWidget', () => {
     it('fetches the weather for the current location', async () => {
       const coords = { latitude: 50.78, longitude: 6.1 };
 
-      (getCurrentPosition as jest.Mock).mockImplementation(() => Promise.resolve({ coords }));
+      (onPositionChange as jest.Mock).mockImplementation(
+        (callback: (position: GeolocationPosition) => void) => {
+          callback({ coords } as GeolocationPosition);
+          return jest.fn();
+        },
+      );
       (getForecast as jest.Mock).mockImplementation(() =>
         Promise.resolve({
           ...coords,
@@ -72,8 +76,7 @@ describe('WeatherWidget', () => {
       render(<WeatherWidget />);
 
       await waitFor(() => {
-        expect(getCurrentPosition).toHaveBeenCalled();
-        expect(getForecast).toHaveBeenCalled();
+        expect(onPositionChange).toHaveBeenCalled();
         expect(getForecast).toHaveBeenCalledWith(expect.objectContaining(coords));
         expect(getPositionInfo).toHaveBeenCalledWith(coords);
       });

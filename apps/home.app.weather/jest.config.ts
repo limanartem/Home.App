@@ -27,7 +27,7 @@ const config: Config.InitialOptions = {
   verbose: true,
   passWithNoTests: true,
   roots: ['src/'],
-  //setupFiles: ['<rootDir>/src/.jest/globalSetup.ts'],
+  setupFiles: ['<rootDir>/src/.jest/globalSetup.ts'],
   testEnvironment: './src/test-utils/undici-mockagent-fetch-jest.ts',
 
   // runner: 'groups',
