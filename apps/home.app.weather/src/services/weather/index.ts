@@ -1,7 +1,7 @@
 import { ForecastResponse } from './types';
 import weatherDescriptions from './descriptions';
 
-const openMeteoApiUrl = 'https://api.open-meteo.com';
+const openMeteoApiUrl = process.env.OPEN_METEO_API_URL;
 
 export type ForecastData = {
   time: Date;

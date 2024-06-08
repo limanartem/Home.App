@@ -8,6 +8,8 @@ if ('geolocation' in navigator) {
 }
 
 const GEO_LOCATION_TIMEOUT = 5000;
+const REACT_GEO_BY_IP_URL = process.env.GEO_BY_IP_URL;
+const BIG_DATA_CLOUD_API_URL = process.env.BIG_DATA_CLOUD_API_URL;
 
 const isGeolocationError = (error: GeolocationPositionError) =>
   [error.PERMISSION_DENIED, error.POSITION_UNAVAILABLE, error.TIMEOUT].includes(
@@ -15,7 +17,7 @@ const isGeolocationError = (error: GeolocationPositionError) =>
   );
 
 const getIpBasedGeolocation = async () => {
-  const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+  const response = await fetch(REACT_GEO_BY_IP_URL!);
   const data = (await response.json()) as GeoJsonResponse;
   return {
     latitude: parseFloat(data.latitude),
@@ -78,7 +80,7 @@ export const getPositionInfo = async ({
   longitude: number;
 }): Promise<PositionInfo> => {
   const response = await fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+    `${BIG_DATA_CLOUD_API_URL}/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
   );
   const data = (await response.json()) as ReverseGeocodeClientResponse;
   return {
