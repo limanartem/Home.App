@@ -16,7 +16,7 @@ jest.mock('../services/weather', () => ({
 describe('WeatherWidget', () => {
   afterEach(() => {
     cleanup();
-    jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('should render a weather widget', () => {
@@ -36,7 +36,7 @@ describe('WeatherWidget', () => {
     });
   });
 
-  describe('should use geolocation for forecast', () => {
+  describe('should use current geolocation for forecast', () => {
     it('fetches the weather for the current location', async () => {
       const coords = { latitude: 50.78, longitude: 6.1 };
 
@@ -77,6 +77,47 @@ describe('WeatherWidget', () => {
 
       await waitFor(() => {
         expect(onPositionChange).toHaveBeenCalled();
+        expect(getForecast).toHaveBeenCalledWith(expect.objectContaining(coords));
+        expect(getPositionInfo).toHaveBeenCalledWith(coords);
+      });
+    });
+  });
+
+  describe('should allow to specify a location', () => {
+    it('fetches the weather for the specified location', async () => {
+      const coords = { latitude: 49.8419, longitude: 24.0315 };
+
+      (getForecast as jest.Mock).mockImplementation(() =>
+        Promise.resolve({
+          ...coords,
+          current: {
+            time: new Date(),
+            temperature: '10°C',
+            description: 'Cloudy',
+            icon: 'cloudy',
+          },
+          hourly: [
+            {
+              time: new Date(),
+              temperature: '10°C',
+              description: 'Cloudy',
+              icon: 'cloudy',
+            },
+          ],
+          day: {
+            highestTemperature: '20°C',
+            lowestTemperature: '5°C',
+          },
+        }),
+      );
+      (getPositionInfo as jest.Mock).mockImplementation(() =>
+        Promise.resolve({ locality: 'Test' }),
+      );
+
+      render(<WeatherWidget location={{ ...coords }} />);
+
+      await waitFor(() => {
+        expect(onPositionChange).not.toHaveBeenCalled();
         expect(getForecast).toHaveBeenCalledWith(expect.objectContaining(coords));
         expect(getPositionInfo).toHaveBeenCalledWith(coords);
       });

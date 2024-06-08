@@ -55,7 +55,17 @@ const WidgetLoading = ({ size }: { size: string }) => (
   </>
 );
 
-export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize }) => {
+type PartialCoordinates = Partial<GeolocationCoordinates> & {
+  latitude: number;
+  longitude: number;
+};
+
+type Props = {
+  size?: WeatherWidgetSize;
+  location?: 'auto' | PartialCoordinates;
+};
+
+export const WeatherWidget = ({ size = 'medium', location = 'auto' }: Props) => {
   const [forecast, setForecast] = useState<Forecast | null>(null);
   const [locationInfo, setLocationInfo] = useState<PositionInfo | null>(null);
 
@@ -63,15 +73,23 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   const widgetWidth = size == 'small' ? baseSize : size == 'medium' ? 2 * 165 : 3 * 165;
   const widgetHeight = size == 'large' ? 2 * 165 : 165;
 
-  const loadForecast = () => {
+  const fetchForecastAndLocationInfo = async (coords: PartialCoordinates) => {
+    try {
+      const forecast = await getForecast(coords);
+      setForecast(forecast);
+
+      const locationInfo = await getPositionInfo(coords);
+      setLocationInfo(locationInfo);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const watchCurrentLocationForecast = () => {
     try {
       const clearOnPositionChange = onPositionChange(async (position) => {
         console.info('Position changed', position);
-        const forecast = await getForecast(position.coords);
-        const locationInfo = await getPositionInfo(position.coords);
-
-        setForecast(forecast);
-        setLocationInfo(locationInfo);
+        await fetchForecastAndLocationInfo(position.coords);
       });
 
       return () => clearOnPositionChange();
@@ -81,7 +99,11 @@ export const WeatherWidget = ({ size = 'medium' }: { size?: WeatherWidgetSize })
   };
 
   useEffect(() => {
-    return loadForecast();
+    if (location === 'auto') {
+      return watchCurrentLocationForecast();
+    } else {
+      fetchForecastAndLocationInfo(location);
+    }
   }, []);
 
   return (

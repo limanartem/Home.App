@@ -11,7 +11,7 @@ const App = () => (
   <Container>
     <Stack spacing={2}>
       <WeatherWidget size="small" />
-      <WeatherWidget size="medium" />
+      <WeatherWidget size="medium" location={{ latitude: 49.8419, longitude: 24.0315 }} />
       <WeatherWidget size="large" />
     </Stack>
   </Container>
