@@ -94,7 +94,7 @@ export const getPositionInfo = async ({
 async function handleGeoPositionError(
   error: GeolocationPositionError,
   success: (value: GeolocationPosition) => Promise<void> | void,
-  failure?: (reason?: any) => Promise<void> | void,
+  failure?: (reason?: Error) => Promise<void> | void,
 ) {
   if (isGeolocationError(error)) {
     // Fallback to use IP based geolocation

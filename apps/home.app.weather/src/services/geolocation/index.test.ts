@@ -8,6 +8,7 @@ describe('geolocation', () => {
 
   beforeEach(() => {
     mockAgent = new MockAgent();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).setMockedFetchGlobalDispatcher(mockAgent);
     mockAgent.disableNetConnect();
 

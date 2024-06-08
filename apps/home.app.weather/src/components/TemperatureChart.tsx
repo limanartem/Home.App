@@ -37,7 +37,7 @@ export default function TemperatureChart({ forecast }: { forecast: ForecastData[
     <Box>
       <Stack direction="row" spacing={0} width={3 * baseSize - 30} paddingLeft={4}>
         {data.icons.map((icon, index) => (
-          <img src={getImageUrl(icon)} alt={icon} width={iconsWidth} />
+          <img src={getImageUrl(icon)} alt={icon} width={iconsWidth} key={index} />
         ))}
       </Stack>
       <ChartContainer

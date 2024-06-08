@@ -4,7 +4,7 @@ const mockGeolocation = {
   clearWatch: jest.fn(),
 };
 
-// @ts-ignore
+// @ts-expect-error geolocation is marked as readonly, but we need to mock it
 global.navigator.geolocation = mockGeolocation;
 
 process.env.GEO_BY_IP_URL = 'https://get.geojs.io/v1/ip/geo.json';

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
-import { render, screen, cleanup, within, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import WeatherWidget from './WeatherWidget';
-import { getCurrentPosition, getPositionInfo, onPositionChange } from '../services/geolocation';
+import { getPositionInfo, onPositionChange } from '../services/geolocation';
 import { getForecast } from '../services/weather';
 
 jest.mock('../services/geolocation', () => ({
