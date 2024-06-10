@@ -4,6 +4,8 @@
 /typescript](https://github.com/module-federation/module-federation-examples/tree/master/typescript).
     * Types in projects containing components are automatically generated to `./dist/@mf-types` 
     * These types are being automatically pulled by host app during build and placed under `@mf-types` so that views can use strongly typed remote components
+# Project structure
+TBD
 # Misc
 ## Update all deps to latest version
 * See https://medium.com/subjective-developer/update-all-node-packages-to-latest-aa128396b92b
