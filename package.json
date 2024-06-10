@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install:packages": "npm install --workspace ./packages",
+    "build:packages": "npm run install:packages && npm run build --workspace ./packages",
+    "install:apps": "npm install --workspace ./apps",
+    "build:apps": "npm run install:apps && npm run build --workspace ./apps"
+
   },
   "author": "Artem Liman",
   "license": "ISC",

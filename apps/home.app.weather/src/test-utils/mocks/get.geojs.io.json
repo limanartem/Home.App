@@ -1,0 +1,17 @@
+{
+  "timezone": "Europe/Berlin",
+  "city": "Mannheim",
+  "asn": 3209,
+  "country": "Germany",
+  "area_code": "0",
+  "organization_name": "Vodafone GmbH",
+  "country_code": "DE",
+  "country_code3": "DEU",
+  "continent_code": "EU",
+  "organization": "AS3209 Vodafone GmbH",
+  "region": "Baden-Wurttemberg",
+  "ip": "176.199.209.82",
+  "longitude": "8.4671",
+  "accuracy": 20,
+  "latitude": "49.5068"
+}

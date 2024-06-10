@@ -11,6 +11,9 @@ const config: Config.InitialOptions = {
     // process `*.tsx` files with `ts-jest`
     '^.+\\.tsx?$': 'ts-jest',
   },
+  moduleNameMapper: {
+    '\\.(css|scss|png)$': 'identity-obj-proxy',
+  },
   // collectCoverage: true,
   coverageThreshold: {
     global: {
@@ -24,9 +27,8 @@ const config: Config.InitialOptions = {
   verbose: true,
   passWithNoTests: true,
   roots: ['src/'],
-  //setupFiles: ['<rootDir>/src/.jest/globalSetup.ts'],
+  setupFiles: ['<rootDir>/src/.jest/globalSetup.ts'],
   testEnvironment: './src/test-utils/undici-mockagent-fetch-jest.ts',
-
 
   // runner: 'groups',
 };

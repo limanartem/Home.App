@@ -11,7 +11,7 @@ describe('weather-service', () => {
   beforeEach(() => {
     mockAgent = new MockAgent();
     mockPool = mockAgent.get(openMeteoApiUrl!);
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).setMockedFetchGlobalDispatcher(mockAgent);
     mockAgent.disableNetConnect();
 
@@ -31,7 +31,7 @@ describe('weather-service', () => {
     beforeEach(async () => {
       mockPool
         .intercept({
-          path: `/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m`,
+          path: `/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weather_code,temperature_2m&current=weather_code,temperature_2m&forecast_days=3`,
           method: 'GET',
         })
         .reply(200, () => mocks.openMeteo.forecast)
@@ -55,7 +55,8 @@ describe('weather-service', () => {
     it('should return a current forecast', () => {
       expect(forecast.current).toMatchObject({
         time: expect.any(Date),
-        temperature: expect.any(String),
+        temperature: expect.any(Number),
+        temperatureString: expect.any(String),
         description: expect.any(String),
         icon: expect.any(String),
       });
@@ -66,7 +67,8 @@ describe('weather-service', () => {
       forecast.hourly.forEach((hourly) => {
         expect(hourly).toMatchObject({
           time: expect.any(Date),
-          temperature: expect.any(String),
+          temperature: expect.any(Number),
+          temperatureString: expect.any(String),
           description: expect.any(String),
           icon: expect.any(String),
         });
@@ -83,6 +85,20 @@ describe('weather-service', () => {
       expect(nightForecast).toMatchObject({
         description: 'Mainly Clear',
         icon: '01n@2x.png',
+      });
+    });
+
+    it('should map temperature units', () => {
+      expect(forecast.current.temperatureString).toMatch(/\d+(\.\d+)?°C/);
+      forecast.hourly.forEach((hourly) => {
+        expect(hourly.temperatureString).toMatch(/\d+(\.\d+)?°C/);
+      });
+    });
+
+    it("should return day's lowest and highest temperature", () => {
+      expect(forecast.day).toMatchObject({
+        lowestTemperature: '9.2°C',
+        highestTemperature: '15.8°C',
       });
     });
   });

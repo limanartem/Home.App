@@ -65,9 +65,7 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin(federationConfig),
-    new FederatedTypesPlugin({
-      federationConfig,
-    }),
+    argv.mode === 'development' ? new FederatedTypesPlugin({ federationConfig }) : undefined,
     new HtmlWebPackPlugin({
       template: './src/index.html',
     }),

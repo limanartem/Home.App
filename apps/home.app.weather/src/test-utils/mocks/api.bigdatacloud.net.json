@@ -1,0 +1,106 @@
+{
+  "latitude": 50.78,
+  "lookupSource": "coordinates",
+  "longitude": 6.1,
+  "localityLanguageRequested": "en",
+  "continent": "Europe",
+  "continentCode": "EU",
+  "countryName": "Germany",
+  "countryCode": "DE",
+  "principalSubdivision": "Nordrhein-Westfalen",
+  "principalSubdivisionCode": "DE-NW",
+  "city": "Aachen",
+  "locality": "Aachen",
+  "postcode": "52070",
+  "plusCode": "9F28Q4J2+22",
+  "localityInfo": {
+      "administrative": [
+          {
+              "name": "Germany",
+              "description": "country in central Europe",
+              "isoName": "Germany",
+              "order": 3,
+              "adminLevel": 2,
+              "isoCode": "DE",
+              "wikidataId": "Q183",
+              "geonameId": 2921044
+          },
+          {
+              "name": "Nordrhein-Westfalen",
+              "description": "state in Germany",
+              "isoName": "Nordrhein-Westfalen",
+              "order": 4,
+              "adminLevel": 4,
+              "isoCode": "DE-NW",
+              "wikidataId": "Q1198",
+              "geonameId": 2861876
+          },
+          {
+              "name": "Cologne Government Region",
+              "description": "government region of North Rhine-Westphalia, Germany",
+              "order": 5,
+              "adminLevel": 5,
+              "wikidataId": "Q7927",
+              "geonameId": 2886241
+          },
+          {
+              "name": "Aachen cities region",
+              "description": "German district of North Rhine-Westphalia",
+              "order": 7,
+              "adminLevel": 6,
+              "wikidataId": "Q6272",
+              "geonameId": 3247448
+          },
+          {
+              "name": "Aachen",
+              "description": "city in North Rhine-Westphalia, Germany",
+              "order": 8,
+              "adminLevel": 8,
+              "wikidataId": "Q1017",
+              "geonameId": 3247449
+          },
+          {
+              "name": "Aachen-Mitte",
+              "description": "human settlement in Germany",
+              "order": 10,
+              "adminLevel": 9,
+              "wikidataId": "Q300703"
+          }
+      ],
+      "informative": [
+          {
+              "name": "Europe",
+              "description": "continent",
+              "isoName": "Europe",
+              "order": 1,
+              "isoCode": "EU",
+              "wikidataId": "Q46",
+              "geonameId": 6255148
+          },
+          {
+              "name": "Europe/Berlin",
+              "description": "time zone",
+              "order": 2
+          },
+          {
+              "name": "Aachener Verkehrsverbund",
+              "order": 6
+          },
+          {
+              "name": "Aachen I",
+              "description": "electoral constituency",
+              "order": 9,
+              "wikidataId": "Q1007920"
+          },
+          {
+              "name": "Aachen (Gemarkung)",
+              "order": 11
+          },
+          {
+              "name": "52070",
+              "description": "postal code",
+              "order": 12
+          }
+      ]
+  }
+}

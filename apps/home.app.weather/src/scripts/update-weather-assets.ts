@@ -1,8 +1,8 @@
 import fs from 'fs';
-import weatherDescriptions from '../services/weather/descriptions.json';
+import weatherDescriptions from '../services/weather/descriptions';
 
 const baseUrl = 'http://openweathermap.org/img/wn/';
-const imageFolder = './public/assets/weather-icons'; // Replace with the path to your local folder
+const imageFolder = './src/assets/images/weather-icons'; // Replace with the path to your local folder
 
 const downloadImages = async () => {
   // Create the folder if it doesn't exist

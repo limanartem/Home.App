@@ -1,7 +1,8 @@
+/* eslint-disable */
+const { TextDecoder, TextEncoder, ReadableStream } = require('node:util');
 import { TestEnvironment } from 'jest-environment-jsdom';
 import { fetch as undiciFetch, Dispatcher } from 'undici';
 import { JestEnvironmentConfig, EnvironmentContext } from '@jest/environment';
-const { TextDecoder, TextEncoder, ReadableStream } = require('node:util');
 
 module.exports = class extends TestEnvironment {
   constructor(config: JestEnvironmentConfig, context: EnvironmentContext) {

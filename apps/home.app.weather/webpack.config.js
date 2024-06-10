@@ -1,11 +1,10 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+//const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const deps = require('./package.json').dependencies;
 const { FederatedTypesPlugin } = require('@module-federation/typescript');
 const path = require('path');
-const { content } = require('../home.app.host/tailwind.config');
-
 
 const federationConfig = {
   name: 'home_app_weather',
@@ -26,18 +25,20 @@ const federationConfig = {
     },
   },
 };
-module.exports = (_, argv) => ({
+module.exports = (env, argv) => ({
   infrastructureLogging: {
     level: 'log',
   },
   output: {
-    publicPath: 'http://localhost:3001/',
+    //publicPath: 'http://localhost:3001/',
+    path: path.resolve(__dirname, './dist'),
+    assetModuleFilename: 'assets/[name][ext]',
   },
 
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
-  mode: 'development',
+  mode: argv.mode,
 
   devServer: {
     static: {
@@ -76,12 +77,20 @@ module.exports = (_, argv) => ({
           loader: 'ts-loader',
         },
       },
+      {
+        test: /\.(png|jpg|gif|svg)$/, // only works for "import" images in tsx files, for dynamic loading had to copy images via CopyPlugin
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
 
   plugins: [
     new ModuleFederationPlugin(federationConfig),
-    new FederatedTypesPlugin({ federationConfig }),
+    argv.mode === 'development' ? new FederatedTypesPlugin({ federationConfig }) : undefined,
     new HtmlWebPackPlugin({
       template: './src/index.html',
       title: 'Weather App',
@@ -89,6 +98,9 @@ module.exports = (_, argv) => ({
       chunks: ['main'],
       publicPath: '/',
     }),
+    /* new CopyPlugin({
+      patterns: [{ from: 'src/assets', to: 'assets' }],
+    }), */
     new Dotenv(),
   ],
 });
