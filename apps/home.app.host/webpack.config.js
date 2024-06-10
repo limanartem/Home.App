@@ -65,6 +65,7 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin(federationConfig),
+    argv.mode === 'development' ? new FederatedTypesPlugin({ federationConfig }) : undefined,
     new FederatedTypesPlugin({
       federationConfig,
     }),

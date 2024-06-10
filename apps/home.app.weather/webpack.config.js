@@ -25,7 +25,7 @@ const federationConfig = {
     },
   },
 };
-module.exports = (_, argv) => ({
+module.exports = (env, argv) => ({
   infrastructureLogging: {
     level: 'log',
   },
@@ -38,7 +38,7 @@ module.exports = (_, argv) => ({
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
-  mode: 'development',
+  mode: argv.mode,
 
   devServer: {
     static: {
@@ -90,7 +90,7 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin(federationConfig),
-    new FederatedTypesPlugin({ federationConfig }),
+    argv.mode === 'development' ? new FederatedTypesPlugin({ federationConfig }) : undefined,
     new HtmlWebPackPlugin({
       template: './src/index.html',
       title: 'Weather App',
